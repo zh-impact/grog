@@ -1,23 +1,22 @@
 import { useEffect, useState } from "react";
 import { Anchor, Avatar, Button } from "@mantine/core";
 
-async function getAllTabs() {
-  const tabs = await chrome.tabs.query({});
-  return tabs;
-}
-
 function getAllGroups() {
   return browser.tabGroups.query({});
 }
 
 function App() {
   const [groups, setGroups] = useState<chrome.tabGroups.TabGroup[]>([]);
-  const [groupId, setGroupId] = useState<number>();
+  const [groupId, setGroupId] = useState<number>(
+    chrome.tabGroups.TAB_GROUP_ID_NONE
+  );
   const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
 
   useEffect(() => {
     (async () => {
-      const tabs = await getAllTabs();
+      const tabs = await chrome.tabs.query({
+        groupId: chrome.tabGroups.TAB_GROUP_ID_NONE,
+      });
       console.log("tabs", tabs);
       setTabs(tabs);
     })();
@@ -55,8 +54,10 @@ function App() {
   }, []);
 
   const handleTabGroupClick = async (tabGroupId?: number) => {
-    setGroupId(tabGroupId);
-    const tabs = await browser.tabs.query({ groupId: tabGroupId });
+    const groupId = tabGroupId ?? chrome.tabGroups.TAB_GROUP_ID_NONE;
+    console.log("groupId", groupId);
+    setGroupId(groupId);
+    const tabs = await browser.tabs.query({ groupId: groupId });
     console.log("tabs", tabs);
     setTabs(tabs);
   };
@@ -68,7 +69,11 @@ function App() {
       <div className="flex gap-4 mb-4">
         <Button
           onClick={() => handleTabGroupClick()}
-          variant={groupId === undefined ? "filled" : "default"}
+          variant={
+            groupId === chrome.tabGroups.TAB_GROUP_ID_NONE
+              ? "filled"
+              : "default"
+          }
         >
           UnGrouped tabs
         </Button>
