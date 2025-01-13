@@ -1,10 +1,6 @@
 import { useEffect, useState } from "react";
 import { Anchor, Avatar, Button } from "@mantine/core";
 
-function getAllGroups() {
-  return browser.tabGroups.query({});
-}
-
 function App() {
   const [groups, setGroups] = useState<chrome.tabGroups.TabGroup[]>([]);
   const [groupId, setGroupId] = useState<number>(
@@ -19,12 +15,8 @@ function App() {
       });
       console.log("tabs", tabs);
       setTabs(tabs);
-    })();
-  }, []);
 
-  useEffect(() => {
-    (async () => {
-      const groups = await getAllGroups();
+      const groups = await browser.tabGroups.query({});
       console.log("groups", groups);
       setGroups(groups);
     })();
