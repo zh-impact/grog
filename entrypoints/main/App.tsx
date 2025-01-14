@@ -1,29 +1,11 @@
 import { useEffect, useState } from "react";
 import { Anchor, Avatar, Button, Combobox, InputBase, useCombobox } from "@mantine/core";
 
+import { useStore } from "./store";
+import { TabList } from "./components/TabList";
+
 function App() {
-  const [groups, setGroups] = useState<chrome.tabGroups.TabGroup[]>([]);
-  const [groupId, setGroupId] = useState<number>(chrome.tabGroups.TAB_GROUP_ID_NONE);
-  const [tabs, setTabs] = useState<chrome.tabs.Tab[]>([]);
-
-  const combobox = useCombobox({
-    onDropdownClose: () => combobox.resetSelectedOption(),
-  });
-
-  const [data, setData] = useState<string[]>([]);
-  const [value, setValue] = useState<string | null>(null);
-  const [search, setSearch] = useState("");
-
-  const exactOptionMatch = data.some((item) => item === search);
-  const filteredOptions = exactOptionMatch
-    ? data
-    : data.filter((item) => item.toLowerCase().includes(search.toLowerCase().trim()));
-
-  const options = filteredOptions.map((item) => (
-    <Combobox.Option value={item} key={item}>
-      {item}
-    </Combobox.Option>
-  ));
+  const { groupId, groups, tabs, setGroupId, setGroups, setTabs } = useStore();
 
   useEffect(() => {
     (async () => {
@@ -36,7 +18,6 @@ function App() {
       const groups = await browser.tabGroups.query({});
       console.log("groups", groups);
       setGroups(groups);
-      setData(groups.map((group) => group.title ?? "untitled"));
     })();
   }, []);
 
@@ -94,61 +75,7 @@ function App() {
         ))}
       </div>
 
-      <ul className="flex flex-col gap-2">
-        {tabs.map((tab) => (
-          <li key={tab.id} className="flex gap-4 items-center">
-            <Avatar src={tab.favIconUrl} size="xs" />
-            <Anchor href={tab.url} target="_blank">
-              {tab.title}
-            </Anchor>
-            <Button onClick={() => browser.tabs.remove(tab.id ?? 0)}>close</Button>
-            <Combobox
-              store={combobox}
-              withinPortal={false}
-              onOptionSubmit={(val) => {
-                if (val === "$create") {
-                  setData((current) => [...current, search]);
-                  setValue(search);
-                } else {
-                  setValue(val);
-                  setSearch(val);
-                }
-
-                combobox.closeDropdown();
-              }}
-            >
-              <Combobox.Target>
-                <InputBase
-                  rightSection={<Combobox.Chevron />}
-                  value={search}
-                  onChange={(event) => {
-                    combobox.openDropdown();
-                    combobox.updateSelectedOptionIndex();
-                    setSearch(event.currentTarget.value);
-                  }}
-                  onClick={() => combobox.openDropdown()}
-                  onFocus={() => combobox.openDropdown()}
-                  onBlur={() => {
-                    combobox.closeDropdown();
-                    setSearch(value || "");
-                  }}
-                  placeholder="Search value"
-                  rightSectionPointerEvents="none"
-                />
-              </Combobox.Target>
-
-              <Combobox.Dropdown>
-                <Combobox.Options>
-                  {options}
-                  {!exactOptionMatch && search.trim().length > 0 && (
-                    <Combobox.Option value="$create">+ Create {search}</Combobox.Option>
-                  )}
-                </Combobox.Options>
-              </Combobox.Dropdown>
-            </Combobox>
-          </li>
-        ))}
-      </ul>
+      <TabList />
     </div>
   );
 }
