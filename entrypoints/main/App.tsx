@@ -54,9 +54,7 @@ function App() {
   };
 
   return (
-    <div className="p-2">
-      <h1 className="text-3xl font-bold">Tabs Manager</h1>
-
+    <>
       <div className="flex gap-4 mb-4 items-center">
         <h2>Groups: </h2>
         <Button
@@ -77,7 +75,7 @@ function App() {
       </div>
 
       <TabList />
-    </div>
+    </>
   );
 }
 
