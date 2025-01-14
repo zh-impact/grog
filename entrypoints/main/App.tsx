@@ -54,10 +54,11 @@ function App() {
   };
 
   return (
-    <div className="p-4">
-      <h1 className="text-3xl font-bold">All tabs</h1>
+    <div className="p-2">
+      <h1 className="text-3xl font-bold">Tabs Manager</h1>
 
-      <div className="flex gap-4 mb-4">
+      <div className="flex gap-4 mb-4 items-center">
+        <h2>Groups: </h2>
         <Button
           onClick={() => handleTabGroupClick()}
           variant={groupId === chrome.tabGroups.TAB_GROUP_ID_NONE ? "filled" : "default"}
