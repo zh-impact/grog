@@ -8,8 +8,9 @@ import { createTheme, MantineProvider } from "@mantine/core";
 
 import { CommonLayout } from "./layouts/common";
 import App from "./pages/App";
-import URLManager from "./pages/URLManager";
-import Spaces from "./pages/Spaces";
+import Space from "./pages/Space";
+import TabGroup from "./pages/TabGroup";
+import URLMan from "./pages/URLMan";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -22,8 +23,9 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route element={<CommonLayout />}>
             <Route path="/" element={<App />} />
-            <Route path="/urls" element={<URLManager />} />
-            <Route path="/spaces" element={<Spaces />} />
+            <Route path="/spaces" element={<Space />} />
+            <Route path="/tabgroups" element={<TabGroup />} />
+            <Route path="/urls" element={<URLMan />} />
           </Route>
         </Routes>
       </HashRouter>

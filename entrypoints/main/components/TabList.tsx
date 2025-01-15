@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
-import { Anchor, Avatar, Button, Combobox, InputBase, useCombobox } from "@mantine/core";
+import { Avatar, Button, Combobox, useCombobox } from "@mantine/core";
 
-import { useStore } from "../store/store";
+import { useStore } from "../store";
 
 export function TabList() {
-  const { groupId, groups, tabs, setGroupId, setGroups, setTabs } = useStore();
+  const tabs = useStore((state) => state.tabs);
+  const groups = useStore((state) => state.groups);
 
   const combobox = useCombobox({
     onDropdownClose: () => combobox.resetSelectedOption(),
@@ -38,7 +39,7 @@ export function TabList() {
 
   const handleReopen = () => {
     browser.sessions.restore();
-  }
+  };
 
   return (
     <ul className="flex flex-col gap-2">

@@ -1,11 +1,11 @@
-import { useEffect, useState } from "react";
-import { Anchor, Avatar, Button, Combobox, InputBase, useCombobox } from "@mantine/core";
+import { useEffect } from "react";
 
 import { useStore } from "../store";
 import { TabList } from "../components/TabList";
 
-function App() {
-  const { groupId, groups, tabs, setGroupId, setGroups, setTabs } = useStore();
+export default function TabGroup() {
+  const setTabs = useStore((state) => state.setTabs);
+  const setGroups = useStore((state) => state.setGroups);
 
   useEffect(() => {
     (async () => {
@@ -44,39 +44,9 @@ function App() {
     };
   }, []);
 
-  const handleTabGroupClick = async (tabGroupId?: number) => {
-    const groupId = tabGroupId ?? chrome.tabGroups.TAB_GROUP_ID_NONE;
-    console.log("groupId", groupId);
-    setGroupId(groupId);
-    const tabs = await browser.tabs.query({ groupId: groupId });
-    console.log("tabs", tabs);
-    setTabs(tabs);
-  };
-
   return (
     <>
-      <div className="flex gap-4 mb-4 items-center">
-        <h2>Groups: </h2>
-        <Button
-          onClick={() => handleTabGroupClick()}
-          variant={groupId === chrome.tabGroups.TAB_GROUP_ID_NONE ? "filled" : "default"}
-        >
-          UnGrouped tabs
-        </Button>
-        {groups.map((group) => (
-          <Button
-            key={group.id}
-            onClick={() => handleTabGroupClick(group.id)}
-            variant={groupId === group.id ? "filled" : "default"}
-          >
-            {group.title}
-          </Button>
-        ))}
-      </div>
-
       <TabList />
     </>
   );
 }
-
-export default App;
