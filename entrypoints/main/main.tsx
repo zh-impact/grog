@@ -9,6 +9,7 @@ import { createTheme, MantineProvider } from "@mantine/core";
 import { CommonLayout } from "./layouts/common";
 import App from "./App";
 import URLManager from "./pages/URLManager";
+import Spaces from "./pages/Spaces";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -21,7 +22,8 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
         <Routes>
           <Route element={<CommonLayout />}>
             <Route path="/" element={<App />} />
-            <Route path="/url-manager" element={<URLManager />} />
+            <Route path="/urls" element={<URLManager />} />
+            <Route path="/spaces" element={<Spaces />} />
           </Route>
         </Routes>
       </HashRouter>
