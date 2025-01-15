@@ -7,10 +7,24 @@ import { IconPlus } from "@tabler/icons-react";
 import { useStore } from "../store";
 
 export default function SpaceNavbar() {
+  const spaces = useStore((state) => state.spaces);
   const windows = useStore((state) => state.windows);
+  const updateSpaces = useStore((state) => state.updateSpaces);
   const updateWindows = useStore((state) => state.updateWindows);
   const updateCurrentWindow = useStore((state) => state.updateCurrentWindow);
+  const updateCurrentSpace = useStore((state) => state.updateCurrentSpace);
   const [opened, { open, close }] = useDisclosure(false);
+
+  const spaceNameValidator = (value: string) => {
+    switch (true) {
+      case !value:
+        return "Space name cannot be empty";
+      case spaces.includes(value):
+        return "Space name already exists";
+      default:
+        return /^\S+$/.test(value) ? null : "Invalid space name";
+    }
+  };
 
   const form = useForm({
     mode: "uncontrolled",
@@ -18,7 +32,7 @@ export default function SpaceNavbar() {
       space: "",
     },
     validate: {
-      space: (value) => (/^\S+$/.test(value) ? null : "Invalid space name"),
+      space: spaceNameValidator,
     },
   });
 
@@ -33,6 +47,11 @@ export default function SpaceNavbar() {
     updateCurrentWindow(window);
   };
 
+  const handleSpaceCreate = (space: string) => {
+    console.log("space", space);
+    updateSpaces([...spaces, space]);
+  };
+
   return (
     <div>
       <div className="flex">
@@ -40,22 +59,30 @@ export default function SpaceNavbar() {
       </div>
       <div>
         {windows.map((window) => (
-          <div key={window.id}>
-            <h2 onClick={() => handleWindowClick(window)}>{window.tabs?.[0]?.title}</h2>
+          <div key={window.id} className="cursor-pointer">
+            <p onClick={() => handleWindowClick(window)}>{window.tabs?.[0]?.title}</p>
           </div>
         ))}
       </div>
 
-      <div className="flex justify-between items-end">
+      <div className="flex justify-between items-center mt-4">
         <Title order={2}>Saved Spaces: </Title>
         <ActionIcon variant="subtle" aria-label="Adding" onClick={open}>
           <IconPlus />
         </ActionIcon>
       </div>
-      <div className="list"></div>
+      <div className="list">
+        <ul>
+          {spaces.map((space) => (
+            <li key={space} className="cursor-pointer">
+              {space}
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <Modal opened={opened} onClose={close} title="Create Space">
-        <form onSubmit={form.onSubmit((values) => console.log(values))}>
+        <form onSubmit={form.onSubmit((values) => handleSpaceCreate(values.space))}>
           <TextInput
             withAsterisk
             label="Space Name"

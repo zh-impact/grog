@@ -1,8 +1,8 @@
 import type { StateCreator } from "zustand";
 
 export interface SpaceSlice {
-  spaces: string[];
   currentSpace?: string;
+  spaces: string[];
   windows: chrome.windows.Window[];
   currentWindow?: chrome.windows.Window;
   updateSpaces: (spaces: string[]) => void;
@@ -12,8 +12,8 @@ export interface SpaceSlice {
 }
 
 export const createSpaceSlice: StateCreator<SpaceSlice, [], [], SpaceSlice> = (set) => ({
-  spaces: [],
   currentSpace: undefined,
+  spaces: [],
   windows: [],
   currentWindow: undefined,
   updateSpaces: (spaces) => set({ spaces }),
