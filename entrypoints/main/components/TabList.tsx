@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Anchor, Avatar, Button, Combobox, InputBase, useCombobox } from "@mantine/core";
 
-import { useStore } from "../store";
+import { useStore } from "../store/store";
 
 export function TabList() {
   const { groupId, groups, tabs, setGroupId, setGroups, setTabs } = useStore();

@@ -7,7 +7,7 @@ import { HashRouter, Routes, Route } from "react-router";
 import { createTheme, MantineProvider } from "@mantine/core";
 
 import { CommonLayout } from "./layouts/common";
-import App from "./App";
+import App from "./pages/App";
 import URLManager from "./pages/URLManager";
 import Spaces from "./pages/Spaces";
 
